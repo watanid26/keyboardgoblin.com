@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Keyboard Goblin: make typing unnecessarily entertaining</title>
-<meta name="description" content="Keyboard Goblin is a desktop app for Windows and Mac that pops a little effect above every key you press. Pick a theme or build your own. Coming soon to Steam.">
+<meta name="description" content="Every key you press creates a little effect at the bottom of your screen, right above that key. Make your own themes with the built-in editor. Coming soon to Steam for Windows and Mac.">
 <link rel="canonical" href="https://keyboardgoblin.com/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://keyboardgoblin.com/">
 <meta property="og:title" content="Keyboard Goblin">
-<meta property="og:description" content="Make typing unnecessarily entertaining. Effects pop above every key you press. Windows and Mac, coming soon to Steam.">
+<meta property="og:description" content="Make typing unnecessarily entertaining. Every key you press creates a little effect right above that key. Coming soon to Steam.">
 <meta property="og:image" content="https://keyboardgoblin.com/assets/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="favicon.ico" sizes="any">
@@ -20,18 +20,21 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Keyboard Goblin","url":"https://keyboardgoblin.com/","applicationCategory":"UtilitiesApplication","operatingSystem":"Windows, macOS","description":"A desktop app that pops a little effect above every key you press. Pick a theme or build your own.","image":"https://keyboardgoblin.com/assets/icon-512.png"}
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Keyboard Goblin","url":"https://keyboardgoblin.com/","applicationCategory":"UtilitiesApplication","operatingSystem":"Windows, macOS","description":"Every key you press creates a little effect at the bottom of your screen, right above that key. Make your own themes with the built-in editor.","image":"https://keyboardgoblin.com/assets/icon-512.png","offers":{"@type":"Offer","price":"4.99","priceCurrency":"USD","availability":"https://schema.org/PreOrder"}}
 </script>
 <style>
 :root{
   --bg:#0b0d12; --bg2:#12151c; --card:#161a23; --line:#262b36;
-  --text:#eef1f6; --muted:#9aa3b2; --lime:#b6f23e; --cyan:#3fd6f5; --violet:#8a7dff;
+  --text:#eef1f6; --muted:#a3abb9; --lime:#b6f23e; --cyan:#3fd6f5; --violet:#8a7dff;
   --glow:linear-gradient(90deg,var(--cyan),var(--violet) 50%,var(--lime));
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
 a{color:var(--lime)}
+:focus-visible{outline:3px solid var(--cyan);outline-offset:3px;border-radius:8px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--lime);color:#0b0d12;padding:10px 14px;border-radius:8px;font-weight:700;z-index:10}
+.skip:focus{left:12px}
 .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
 header.top{display:flex;align-items:center;justify-content:space-between;padding:18px 0}
 .brand{display:flex;align-items:center;gap:10px;color:var(--text);text-decoration:none;font-weight:800;font-size:18px}
@@ -39,143 +42,224 @@ header.top{display:flex;align-items:center;justify-content:space-between;padding
 .brand b{color:var(--lime)}
 nav a{color:var(--muted);text-decoration:none;margin-left:22px;font-weight:500;font-size:15px}
 nav a:hover{color:var(--text)}
-.hero{text-align:center;padding:48px 0 24px}
-.hero img.logo{width:140px;height:140px;display:block;margin:0 auto;border-radius:32px;box-shadow:0 20px 60px -10px rgba(182,242,62,.25)}
-h1{font-size:clamp(40px,7vw,72px);line-height:1.02;margin:24px 0 12px;font-weight:800;letter-spacing:-.03em}
+.hero{text-align:center;padding:36px 0 8px}
+.hero img.logo{width:112px;height:112px;display:block;margin:0 auto;border-radius:26px;box-shadow:0 20px 60px -10px rgba(182,242,62,.25)}
+h1{font-size:clamp(40px,7vw,68px);line-height:1.02;margin:20px 0 10px;font-weight:800;letter-spacing:-.03em}
 h1 span{color:var(--lime)}
-.tag{font-size:clamp(18px,2.4vw,22px);color:var(--muted);margin:0 auto 28px;max-width:640px}
+.tag{font-size:clamp(20px,2.6vw,26px);font-weight:700;margin:0 0 8px}
+.sub{font-size:clamp(16px,2vw,19px);color:var(--muted);margin:0 auto 26px;max-width:620px}
 .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border-radius:12px;font-weight:700;text-decoration:none;font-size:16px;border:1px solid var(--line);color:var(--text);background:var(--card)}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;min-height:48px;border-radius:12px;font-weight:700;text-decoration:none;font-size:16px;border:1px solid var(--line);color:var(--text);background:var(--card);cursor:pointer;font-family:inherit}
 .btn.primary{background:var(--lime);color:#0b0d12;border-color:var(--lime)}
-.btn.primary:hover{filter:brightness(1.08)}
+.btn.primary[aria-disabled=true]{cursor:default}
 .btn svg{width:20px;height:20px}
-.small{font-size:14px;color:var(--muted);margin-top:14px}
+.small{font-size:14px;color:var(--muted);margin-top:12px}
 
-/* demo */
-.demo{margin:44px auto 0;max-width:900px}
-.screen{position:relative;height:300px;border-radius:18px 18px 6px 6px;background:radial-gradient(120% 90% at 50% 120%,#1a2440 0%,#0e1119 55%,#0b0d12 100%);border:1px solid var(--line);overflow:hidden}
-.screen .hint{position:absolute;top:16px;left:0;right:0;text-align:center;color:var(--muted);font-size:14px;pointer-events:none;transition:opacity .4s}
-.screen .edge{position:absolute;left:4%;right:4%;bottom:10px;height:3px;border-radius:3px;background:var(--glow);box-shadow:0 0 18px rgba(63,214,245,.6)}
-.fx{position:absolute;bottom:14px;pointer-events:none;will-change:transform,opacity}
-.themes{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:14px 0 10px}
-.themes button{font:inherit;font-size:14px;font-weight:600;padding:9px 16px;min-height:40px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--muted);cursor:pointer}
-.themes button[aria-pressed=true]{background:var(--lime);color:#0b0d12;border-color:var(--lime)}
-.kb{display:grid;gap:6px;padding:12px;background:var(--bg2);border:1px solid var(--line);border-radius:6px 6px 16px 16px;user-select:none;-webkit-user-select:none;touch-action:manipulation}
-.row{display:flex;gap:6px}
-.key{flex:1;min-width:0;height:44px;border-radius:8px;background:#1d2230;border:1px solid #2b3142;border-bottom-width:3px;color:#c9d0dc;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .05s,background .1s}
-.key.down{transform:translateY(2px);border-bottom-width:1px;background:#2a3350;color:#fff}
-.key.space{flex:6}
-.row.r2{padding-left:3%}.row.r3{padding-left:8%}.row.r4{padding:0 22%}
+/* hero video */
+.player{margin:36px auto 0;max-width:980px}
+.vid{position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:#000;aspect-ratio:16/9;box-shadow:0 30px 80px -30px rgba(0,0,0,.8)}
+.vid video{display:block;width:100%;height:100%;object-fit:cover}
+.chips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:14px 0 0}
+.chips button{font:inherit;font-size:14px;font-weight:600;padding:10px 16px;min-height:48px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--muted);cursor:pointer}
+.chips button[aria-pressed=true]{background:var(--lime);color:#0b0d12;border-color:var(--lime)}
+.cap{color:var(--muted);font-size:14px;text-align:center;margin:10px 0 0}
 
-section{padding:72px 0 0}
+section{padding:80px 0 0;scroll-margin-top:12px}
 h2{font-size:clamp(28px,4vw,40px);line-height:1.15;margin:0 0 12px;letter-spacing:-.02em}
-.lead{color:var(--muted);font-size:18px;max-width:640px;margin:0 0 32px}
+.lead{color:var(--muted);font-size:18px;max-width:660px;margin:0 0 28px}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px}
 .card h3{margin:0 0 6px;font-size:19px}
 .card p{margin:0;color:var(--muted)}
 .card .n{display:inline-flex;width:32px;height:32px;border-radius:9px;align-items:center;justify-content:center;background:rgba(182,242,62,.12);color:var(--lime);font-weight:800;margin-bottom:14px}
-.split{display:grid;grid-template-columns:1fr 1.25fr;gap:40px;align-items:center}
+
+/* column illustration */
+.cols{position:relative;height:230px;border-radius:16px 16px 6px 6px;background:radial-gradient(120% 90% at 50% 120%,#1a2440 0%,#0e1119 55%,#0b0d12 100%);border:1px solid var(--line);overflow:hidden}
+.cols .edge{position:absolute;left:3%;right:3%;bottom:8px;height:3px;border-radius:3px;background:var(--glow);opacity:.7}
+.cols .guide{position:absolute;top:0;bottom:0;width:0;border-left:1px dashed rgba(255,255,255,.14)}
+.fx{position:absolute;bottom:12px;pointer-events:none;will-change:transform,opacity}
+.kb{display:grid;gap:6px;padding:12px;background:var(--bg2);border:1px solid var(--line);border-radius:6px 6px 16px 16px;user-select:none;-webkit-user-select:none}
+.row{display:flex;gap:6px}
+.key{flex:1;min-width:0;height:40px;border-radius:8px;background:#1d2230;border:1px solid #2b3142;border-bottom-width:3px;color:#c9d0dc;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;transition:transform .05s,background .1s}
+.key.down{transform:translateY(2px);border-bottom-width:1px;background:#2a3350;color:#fff}
+.key.hot{border-color:var(--lime);color:var(--lime)}
+.row.r2{padding-left:3%}.row.r3{padding-left:8%}
+.note{font-size:14px;color:var(--muted);margin:10px 0 0}
+
+/* make */
+.split{display:grid;grid-template-columns:1fr 1.2fr;gap:40px;align-items:start}
 .split>*{min-width:0}
 .shot{width:100%;height:auto;border-radius:14px;border:1px solid var(--line);box-shadow:0 30px 80px -30px rgba(0,0,0,.8)}
-ul.ticks{list-style:none;padding:0;margin:0 0 8px}
-ul.ticks li{padding-left:28px;position:relative;margin:10px 0;color:#cfd5df}
-ul.ticks li:before{content:"";position:absolute;left:0;top:8px;width:14px;height:8px;border-left:3px solid var(--lime);border-bottom:3px solid var(--lime);transform:rotate(-45deg)}
-.privacy{display:flex;gap:20px;align-items:flex-start;background:linear-gradient(180deg,#141a14,#12151c);border:1px solid #2c3a22;border-radius:18px;padding:28px}
-.privacy .shield{flex:none;width:48px;height:48px;border-radius:12px;background:rgba(182,242,62,.12);display:flex;align-items:center;justify-content:center}
-.privacy h2{font-size:26px}
-.privacy p{margin:0;color:#cfd5df}
-.final{text-align:center;padding:84px 0 40px}
+.emph{display:inline-block;background:rgba(182,242,62,.12);color:var(--lime);font-weight:700;padding:6px 12px;border-radius:8px;margin:0 0 20px}
+ul.ticks{list-style:none;padding:0;margin:0;columns:2;column-gap:24px}
+ul.ticks li{padding-left:26px;position:relative;margin:0 0 10px;color:#d3d9e2;break-inside:avoid}
+ul.ticks li:before{content:"";position:absolute;left:2px;top:8px;width:12px;height:7px;border-left:3px solid var(--lime);border-bottom:3px solid var(--lime);transform:rotate(-45deg)}
+ul.ticks li.later{color:var(--muted)}
+ul.ticks li.later:before{border-color:#5b6476}
+.later em{font-style:normal;font-size:12px;font-weight:700;color:#0b0d12;background:#8b93a3;border-radius:5px;padding:1px 6px;margin-left:6px}
+ol.flow{list-style:none;padding:0;margin:36px 0 0;display:grid;grid-template-columns:repeat(6,1fr);gap:10px;counter-reset:f}
+ol.flow li{counter-increment:f;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 12px;font-weight:600;font-size:15px}
+ol.flow li:before{content:counter(f);display:block;color:var(--lime);font-weight:800;font-size:13px;margin-bottom:4px}
+
+/* themes */
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.tcard{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.tcard video,.tcard img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:#000}
+.tcard div{padding:16px 18px 18px}
+.tcard h3{margin:0 0 4px;font-size:18px}
+.tcard p{margin:0;color:var(--muted);font-size:15px}
+
+.box{display:flex;gap:20px;align-items:flex-start;border-radius:18px;padding:28px;border:1px solid var(--line);background:var(--card)}
+.box.green{background:linear-gradient(180deg,#141a14,#12151c);border-color:#2c3a22}
+.box .ic{flex:none;width:48px;height:48px;border-radius:12px;background:rgba(182,242,62,.12);display:flex;align-items:center;justify-content:center}
+.box p{margin:0 0 10px;color:#d3d9e2}
+.box p:last-child{margin:0}
+.status{font-size:14px;color:var(--muted)}
+
+details{background:var(--card);border:1px solid var(--line);border-radius:12px;margin:0 0 10px}
+summary{cursor:pointer;padding:16px 18px;font-weight:700;min-height:48px;list-style-position:inside}
+details p{margin:0;padding:0 18px 16px;color:#d3d9e2}
+
+.final{text-align:center;padding:90px 0 40px}
+.final .price{font-size:22px;font-weight:800;margin:0 0 6px}
 footer{border-top:1px solid var(--line);margin-top:40px;padding:24px 0 40px;color:var(--muted);font-size:14px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
-footer a{color:var(--muted)}
-@media (max-width:820px){
-  .grid3{grid-template-columns:1fr}
+@media (max-width:860px){
+  .grid3,.tgrid{grid-template-columns:1fr}
   .split{grid-template-columns:1fr}
+  ol.flow{grid-template-columns:repeat(2,1fr)}
   nav{display:none}
-  .screen{height:220px}
-  .key{height:40px;font-size:12px}
-  .row.r4{padding:0 12%}
+  .cols{height:180px}
+  .key{height:34px;font-size:12px}
 }
-@media (max-width:480px){.row .key.opt{display:none}.privacy{flex-direction:column}}
+@media (max-width:520px){ul.ticks{columns:1}.box{flex-direction:column}.row .key{font-size:11px}.row{gap:4px}.kb{padding:8px;gap:4px}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 <div class="wrap">
   <header class="top">
     <a class="brand" href="/"><img src="assets/favicon-64.png" alt="" width="36" height="36">Keyboard <b>Goblin</b></a>
-    <nav><a href="#how">How it works</a><a href="#make">Make your own</a><a href="#privacy">Privacy</a></nav>
+    <nav aria-label="Sections"><a href="#how">How it works</a><a href="#make">Make your own</a><a href="#themes">Themes</a><a href="#privacy">Privacy</a><a href="#faq">FAQ</a></nav>
   </header>
 
-  <main>
+  <main id="main">
     <div class="hero">
-      <img class="logo" src="assets/icon-512.png" alt="Keyboard Goblin logo: a keycap with goblin ears and a grin" width="140" height="140">
+      <img class="logo" src="assets/icon-512.png" alt="Keyboard Goblin logo: a keycap with goblin ears and a grin" width="112" height="112">
       <h1>Keyboard <span>Goblin</span></h1>
-      <p class="tag">Make typing unnecessarily entertaining. Every key you press pops a little effect at the bottom of your screen, right above that key.</p>
+      <p class="tag">Make typing unnecessarily entertaining.</p>
+      <p class="sub">Every key you press creates a little effect at the bottom of your screen, right above that key.</p>
       <div class="cta">
-        <a class="btn primary" href="#" id="steam" aria-label="Keyboard Goblin on Steam (coming soon)">
+        <a class="btn primary steam" id="steam" role="link" aria-disabled="true">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-9.96 9.1l5.36 2.22a2.83 2.83 0 0 1 1.6-.5l2.4-3.47v-.05a3.79 3.79 0 1 1 3.79 3.79h-.09l-3.42 2.44a2.84 2.84 0 0 1-5.63.55L2.2 14.4A10 10 0 1 0 12 2zm-4.7 15.17-1.23-.51a2.13 2.13 0 1 0 1.17-2.9l1.27.53a1.57 1.57 0 1 1-1.2 2.9zm9.6-7.97a2.53 2.53 0 1 0-2.53 2.53 2.53 2.53 0 0 0 2.53-2.53zm-4.42 0a1.9 1.9 0 1 1 1.9 1.9 1.9 1.9 0 0 1-1.9-1.9z"/></svg>
-          Coming soon to Steam
+          <span>Coming soon to Steam</span>
         </a>
-        <a class="btn" href="#demo">Try it here</a>
+        <a class="btn" href="#watch">Watch it in action</a>
       </div>
       <p class="small">For Windows and Mac</p>
     </div>
 
-    <div class="demo" id="demo">
-      <div class="themes" role="group" aria-label="Pick a theme for the demo">
-        <button data-t="rainbow" aria-pressed="true">Rainbow</button>
-        <button data-t="sparks" aria-pressed="false">Sparks</button>
-        <button data-t="snow" aria-pressed="false">Snow</button>
-        <button data-t="words" aria-pressed="false">Words</button>
+    <div class="player" id="watch">
+      <div class="vid">
+        <video id="heroVid" autoplay muted loop playsinline preload="metadata" aria-describedby="heroCap"></video>
       </div>
-      <div class="screen" id="screen" aria-hidden="true">
-        <div class="hint" id="hint">Type on your keyboard, or tap the keys below</div>
-        <div class="edge"></div>
-      </div>
-      <div class="kb" id="kb" aria-label="Demo keyboard"></div>
+      <div class="chips" id="chips" role="group" aria-label="Choose a theme to watch"></div>
+      <p class="cap" id="heroCap">Recorded in the real app.</p>
     </div>
 
     <section id="how">
       <h2>It lives at the edge of your screen</h2>
-      <p class="lead">Keyboard Goblin sits quietly on top of everything. Clicks go straight through it, so it never gets in your way.</p>
+      <p class="lead">Keyboard Goblin stays above your other apps without getting in the way. Clicks pass through, so your work continues normally.</p>
       <div class="grid3">
-        <div class="card"><div class="n">1</div><h3>Press a key</h3><p>Anywhere, in any app. Writing, coding, chatting, gaming.</p></div>
-        <div class="card"><div class="n">2</div><h3>Something pops up</h3><p>A glow, a spark, a sound or a little character appears right above the key you pressed.</p></div>
-        <div class="card"><div class="n">3</div><h3>Switch the mood</h3><p>Dozens of built-in themes, from calm rain to full chaos. Change them in a click.</p></div>
+        <div class="card"><div class="n">1</div><h3>Press a key</h3><p>Anywhere you type: in a document, editor, browser or game.</p></div>
+        <div class="card"><div class="n">2</div><h3>Something appears</h3><p>A glow, spark, word, sound or character appears above the exact key position.</p></div>
+        <div class="card"><div class="n">3</div><h3>Change the mood</h3><p>Switch themes instantly, from quiet and minimal to completely chaotic.</p></div>
       </div>
+    </section>
+
+    <section id="different">
+      <h2>Not just keyboard effects</h2>
+      <p class="lead">Most keyboard effects appear in one fixed place. Keyboard Goblin follows the key you actually press. Every effect starts from the key's vertical position.</p>
+      <div class="cols" id="cols" role="img" aria-label="Illustration: pressing Q on the left, G in the middle and P on the right makes an effect rise in three different places, each one straight above its key."></div>
+      <div class="kb" id="kb" aria-hidden="true"></div>
+      <p class="note">Illustration. Press Q, G or P (or any letter) to try it.</p>
     </section>
 
     <section id="make">
       <div class="split">
         <div>
           <h2>Make your own theme</h2>
-          <p class="lead">The built-in themes are made with the same editor you get. Start from a blank theme or copy one you like, then change anything.</p>
-          <ul class="ticks">
-            <li>Add your own pictures, animations and sounds</li>
-            <li>Decide what shows up, where, and when</li>
-            <li>Watch it live in the preview while you build</li>
-            <li>Share it on the Steam Workshop</li>
-          </ul>
+          <p class="lead">The built-in themes are made with the same editor you get. Start from a template or a blank theme. Add your own pictures, animations, sounds and fonts. Decide what appears, where it appears and what happens next. Watch everything live in the preview while you build.</p>
+          <p class="emph">Build visually. No coding required.</p>
         </div>
-        <img class="shot" src="assets/editor.jpg" alt="The Keyboard Goblin theme editor with a live preview, a list of built-in themes and settings for each effect" loading="lazy" width="1600" height="1108">
+        <img class="shot" src="assets/editor.jpg" alt="The Keyboard Goblin theme editor: a list of themes on the left, editing tabs across the top and a live preview strip showing the effects" loading="lazy" width="1600" height="1108">
+      </div>
+      <ul class="ticks" id="features" style="margin-top:32px">
+        <li>Add pictures and animations</li>
+        <li>Add sounds and music</li>
+        <li>Upload a theme font</li>
+        <li>Create ground effects</li>
+        <li>Place effects on key columns</li>
+        <li>Make characters move and react</li>
+        <li>Add counters and text</li>
+        <li>Build rules from simple actions</li>
+        <li>Preview while you edit</li>
+        <li class="later">Share themes on Steam Workshop<em>With the Steam release</em></li>
+      </ul>
+      <ol class="flow" aria-label="How making a theme goes">
+        <li>Choose a starting point</li>
+        <li>Put something on the stage</li>
+        <li>Tell it what to do</li>
+        <li>Change how it looks</li>
+        <li>Test it</li>
+        <li>Share it</li>
+      </ol>
+    </section>
+
+    <section id="themes">
+      <h2>Theme examples</h2>
+      <p class="lead">A few of the themes that come with Keyboard Goblin. Every one was made in the editor, so you can open it and make it your own.</p>
+      <div class="tgrid" id="tgrid"></div>
+    </section>
+
+    <section id="workshop">
+      <h2>Share the chaos</h2>
+      <p class="lead">Create a theme, publish it to Steam Workshop, and let other people use your pictures, sounds, fonts and effects.</p>
+      <div class="box">
+        <div class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#b6f23e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 8 5-5 5 5"/><path d="M5 21h14"/></svg></div>
+        <div>
+          <p>Steam Workshop sharing is coming with the Steam release.</p>
+          <p class="status">Until then, every theme you make stays on your own computer.</p>
+        </div>
       </div>
     </section>
 
     <section id="privacy">
-      <div class="privacy">
-        <div class="shield"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#b6f23e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
+      <div class="box green">
+        <div class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#b6f23e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
         <div>
-          <h2>What you type stays yours</h2>
-          <p>Keyboard Goblin only needs to know where a key is so it can put the effect above it. What you type is never saved, and never sent anywhere.</p>
+          <h2 style="font-size:26px">What you type stays yours</h2>
+          <p>Keyboard Goblin never reads your letters, words or messages. It only uses the position of the pressed key to place an effect. What you type is never saved, uploaded or analyzed.</p>
         </div>
       </div>
     </section>
 
-    <div class="final">
+    <section id="faq">
+      <h2>Questions</h2>
+      <details><summary>Does Keyboard Goblin record what I type?</summary><p>No. It only uses the position of the key you pressed to place an effect. Your letters, words and messages are never saved, uploaded or analyzed.</p></details>
+      <details><summary>Does it stay above other apps?</summary><p>Yes. It is designed to stay above other apps while letting clicks pass through, so you can keep working normally.</p></details>
+      <details><summary>Can I make my own theme?</summary><p>Yes. The editor that made the built-in themes is included. Start from a template or a blank theme, no coding required.</p></details>
+      <details><summary>Can I use my own pictures and sounds?</summary><p>Yes, as long as you made them or have permission to use them.</p></details>
+      <details><summary>Can I share my theme?</summary><p>Yes, through Steam Workshop when the Workshop release is available.</p></details>
+      <details><summary>Will it slow down my computer?</summary><p>It is designed to be lightweight, and each theme can limit how many things are on screen at once.</p></details>
+      <details><summary>Does it work with multiple monitors?</summary><p>Yes. The effects appear on the screen you are currently using.</p></details>
+    </section>
+
+    <div class="final" id="launch">
       <h2>Coming soon to Steam</h2>
-      <p class="lead" style="margin:0 auto 24px">For Windows and Mac.</p>
-      <a class="btn primary" href="#" id="steam2">Coming soon to Steam</a>
+      <p class="lead" style="margin:0 auto 6px">For Windows and Mac. One-time purchase. No subscription.</p>
+      <p class="price">Launching at $4.99</p>
+      <p style="margin:18px 0 0"><a class="btn primary steam" id="steam2" role="link" aria-disabled="true"><span>Coming soon to Steam</span></a></p>
     </div>
   </main>
 
@@ -185,109 +269,87 @@ footer a{color:var(--muted)}
   </footer>
 </div>
 
+<script src="themes.js"></script>
 <script>
 (function(){
-  // Steam link: set this when the store page exists.
+  // Steam store page: set this when it exists. Until then the buttons are inert labels, not links.
   var STEAM_URL = "";
-  if (STEAM_URL) { ["steam","steam2"].forEach(function(id){ var a=document.getElementById(id); a.href=STEAM_URL; a.lastChild.textContent=" Wishlist on Steam"; }); }
-  else { ["steam","steam2"].forEach(function(id){ document.getElementById(id).addEventListener("click",function(e){e.preventDefault();}); }); }
+  if (STEAM_URL) {
+    document.querySelectorAll(".steam").forEach(function(a){
+      a.href = STEAM_URL; a.removeAttribute("role"); a.removeAttribute("aria-disabled");
+      a.querySelector("span").textContent = "Wishlist on Steam";
+    });
+  }
 
-  var rows = [
-    ["Q","W","E","R","T","Y","U","I","O","P"],
-    ["A","S","D","F","G","H","J","K","L"],
-    ["Z","X","C","V","B","N","M"],
-    [" "]
-  ];
-  var kb = document.getElementById("kb"), screen = document.getElementById("screen"), hint = document.getElementById("hint");
-  var keyEls = {};
+  // Real recordings from the app. First one is shown first.
+  var THEMES = window.KG_THEMES || [];
+  var vid = document.getElementById("heroVid"), chips = document.getElementById("chips"), cap = document.getElementById("heroCap");
+  function show(t, btn){
+    vid.src = t.video; if (t.poster) vid.poster = t.poster;
+    vid.setAttribute("aria-label", t.name + " theme recorded in the app: " + t.desc);
+    cap.textContent = t.name + ". " + t.desc + " Recorded in the real app.";
+    chips.querySelectorAll("button").forEach(function(b){ b.setAttribute("aria-pressed", b===btn); });
+    var p = vid.play(); if (p && p.catch) p.catch(function(){});
+  }
+  THEMES.forEach(function(t, i){
+    var b = document.createElement("button"); b.type="button"; b.textContent = t.name;
+    b.addEventListener("click", function(){ show(t, b); });
+    chips.appendChild(b);
+    if (i===0) show(t, b);
+  });
+  var grid = document.getElementById("tgrid");
+  THEMES.forEach(function(t){
+    var c = document.createElement("article"); c.className="tcard";
+    var v = document.createElement("video");
+    v.muted = true; v.loop = true; v.playsInline = true; v.preload = "none"; v.src = t.video;
+    if (t.poster) v.poster = t.poster;
+    v.setAttribute("aria-label", t.name + " theme recorded in the app");
+    c.appendChild(v);
+    var d = document.createElement("div");
+    d.innerHTML = "<h3></h3><p></p>"; d.querySelector("h3").textContent = t.name; d.querySelector("p").textContent = t.desc;
+    c.appendChild(d); grid.appendChild(c);
+    if ("IntersectionObserver" in window){
+      new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ var p=v.play(); if(p&&p.catch)p.catch(function(){}); } else v.pause(); }); },{threshold:.4}).observe(v);
+    }
+  });
+
+  // Key-column illustration.
+  var rows = [["Q","W","E","R","T","Y","U","I","O","P"],["A","S","D","F","G","H","J","K","L"],["Z","X","C","V","B","N","M"]];
+  var kb = document.getElementById("kb"), cols = document.getElementById("cols"), keyEls = {};
+  var edge = document.createElement("div"); edge.className="edge"; cols.appendChild(edge);
   rows.forEach(function(r,i){
     var row = document.createElement("div"); row.className = "row r"+(i+1);
-    r.forEach(function(k){
-      var b = document.createElement("div"); b.className = "key"+(k===" "?" space":"");
-      b.textContent = k===" " ? "space" : k; b.dataset.k = k;
-      row.appendChild(b); keyEls[k] = b;
-    });
+    r.forEach(function(k){ var b=document.createElement("div"); b.className="key"; b.textContent=k; row.appendChild(b); keyEls[k]=b; });
     kb.appendChild(row);
   });
-
-  var theme = "rainbow", hue = 0;
-  document.querySelectorAll(".themes button").forEach(function(b){
-    b.addEventListener("click", function(){
-      theme = b.dataset.t;
-      document.querySelectorAll(".themes button").forEach(function(x){ x.setAttribute("aria-pressed", x===b); });
-    });
-  });
-
+  ["Q","G","P"].forEach(function(k){ keyEls[k].classList.add("hot"); });
   var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var WORDS = ["nice","wow","yes","clack","tap","ooh","again","boop"];
-
-  function anim(el, frames, ms){
-    screen.appendChild(el);
-    var a = el.animate(frames, {duration: reduce? ms*0.6 : ms, easing:"cubic-bezier(.2,.7,.3,1)", fill:"forwards"});
-    a.onfinish = function(){ el.remove(); };
-  }
-  function xFor(k){
-    var kr = keyEls[k].getBoundingClientRect(), sr = screen.getBoundingClientRect();
-    return kr.left + kr.width/2 - sr.left;
-  }
+  var COL = {Q:"#3fd6f5", G:"#b6f23e", P:"#8a7dff"};
+  function xFor(k){ var kr=keyEls[k].getBoundingClientRect(), sr=cols.getBoundingClientRect(); return kr.left+kr.width/2-sr.left; }
   function pop(k){
     if (!keyEls[k]) return;
-    var x = xFor(k);
-    if (k===" ") x += (Math.random()-.5)*120;
-    if (theme==="rainbow"){
-      hue = (hue+28)%360;
-      var c = "hsl("+hue+" 95% 62%)";
-      var el = document.createElement("div"); el.className="fx";
-      el.style.cssText += "left:"+(x-26)+"px;width:52px;height:120px;border-radius:26px 26px 6px 6px;background:linear-gradient(to top,"+c+",transparent);filter:blur(2px);box-shadow:0 0 30px "+c;
-      anim(el,[{transform:"scaleY(.2)",transformOrigin:"bottom",opacity:1},{transform:"scaleY(1)",opacity:.9,offset:.35},{transform:"scaleY(1.1)",opacity:0}],900);
-    } else if (theme==="sparks"){
-      for (var i=0;i<10;i++){
-        var s=document.createElement("div"); s.className="fx";
-        var col=["#ffe066","#ffb703","#fff","#b6f23e"][i%4];
-        s.style.cssText += "left:"+x+"px;width:5px;height:5px;border-radius:50%;background:"+col+";box-shadow:0 0 8px "+col;
-        var ang=(-Math.PI/2)+(Math.random()-.5)*1.9, d=60+Math.random()*110;
-        anim(s,[{transform:"translate(0,0)",opacity:1},{transform:"translate("+Math.cos(ang)*d+"px,"+(Math.sin(ang)*d+40)+"px)",opacity:0}],700+Math.random()*400);
-      }
-    } else if (theme==="snow"){
-      for (var j=0;j<4;j++){
-        var f=document.createElement("div"); f.className="fx";
-        var sz=5+Math.random()*7;
-        f.style.cssText += "left:"+(x+(Math.random()-.5)*40)+"px;width:"+sz+"px;height:"+sz+"px;border-radius:50%;background:#eaf6ff;opacity:.9";
-        var up=110+Math.random()*120, drift=(Math.random()-.5)*60;
-        anim(f,[{transform:"translate(0,0)",opacity:0},{transform:"translate("+drift/2+"px,-"+up+"px)",opacity:.95,offset:.45},{transform:"translate("+drift+"px,-"+(up-50)+"px)",opacity:0}],1800+Math.random()*700);
-      }
-    } else {
-      var w=document.createElement("div"); w.className="fx";
-      w.textContent = WORDS[Math.floor(Math.random()*WORDS.length)];
-      w.style.cssText += "left:"+x+"px;font-weight:800;font-size:22px;color:#b6f23e;text-shadow:0 0 14px rgba(182,242,62,.6);white-space:nowrap";
-      anim(w,[{transform:"translate(-50%,0) scale(.6)",opacity:0},{transform:"translate(-50%,-90px) scale(1.15)",opacity:1,offset:.3},{transform:"translate(-50%,-150px) scale(1)",opacity:0}],1100);
-    }
-    var ke = keyEls[k]; ke.classList.add("down"); setTimeout(function(){ ke.classList.remove("down"); },110);
+    var x = xFor(k), c = COL[k] || "#ffd166";
+    var el = document.createElement("div"); el.className="fx";
+    el.style.cssText += "left:"+(x-22)+"px;width:44px;height:110px;border-radius:22px 22px 6px 6px;background:linear-gradient(to top,"+c+",transparent);box-shadow:0 0 26px "+c;
+    cols.appendChild(el);
+    var a = el.animate([{transform:"scaleY(.2)",transformOrigin:"bottom",opacity:1},{transform:"scaleY(1)",opacity:.9,offset:.35},{transform:"scaleY(1.1)",opacity:0}],{duration:reduce?500:1000,easing:"cubic-bezier(.2,.7,.3,1)",fill:"forwards"});
+    a.onfinish = function(){ el.remove(); };
+    var ke = keyEls[k]; ke.classList.add("down"); setTimeout(function(){ ke.classList.remove("down"); },120);
   }
-
   var lastUser = 0;
   document.addEventListener("keydown", function(e){
-    if (e.metaKey||e.ctrlKey||e.altKey) return;
-    var k = e.key===" " ? " " : (e.key||"").toUpperCase();
-    if (!keyEls[k]) return;
-    var r = screen.getBoundingClientRect();
-    if (r.bottom < 0 || r.top > innerHeight) return;
-    if (k===" ") e.preventDefault();
-    lastUser = Date.now(); hint.style.opacity = 0; pop(k);
+    if (e.metaKey||e.ctrlKey||e.altKey||e.target.closest("input,textarea")) return;
+    var k = (e.key||"").toUpperCase(), r = cols.getBoundingClientRect();
+    if (!keyEls[k] || r.bottom < 0 || r.top > innerHeight) return;
+    lastUser = Date.now(); pop(k);
   });
-  kb.addEventListener("pointerdown", function(e){
-    var t = e.target.closest(".key"); if (!t) return;
-    lastUser = Date.now(); hint.style.opacity = 0; pop(t.dataset.k);
-  });
-
-  // Gentle self-typing until the visitor tries it.
-  var text = "MAKE TYPING UNNECESSARILY ENTERTAINING ", p = 0;
+  var seq = ["Q","G","P"], i = 0;
   function auto(){
-    var vis = screen.getBoundingClientRect();
-    if (!document.hidden && Date.now()-lastUser > 4000 && vis.bottom>0 && vis.top<innerHeight){ pop(text[p%text.length]); p++; }
-    setTimeout(auto, 150 + Math.random()*120);
+    var r = cols.getBoundingClientRect();
+    if (!document.hidden && Date.now()-lastUser > 3000 && r.bottom>0 && r.top<innerHeight){ pop(seq[i%3]); i++; }
+    setTimeout(auto, reduce ? 1400 : 650);
   }
-  if (!reduce) setTimeout(auto, 800);
+  setTimeout(auto, 600);
 })();
 </script>
 </body>
